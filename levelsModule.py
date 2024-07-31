@@ -5,17 +5,21 @@ You can start the app by running `py -m streamlit run Levels.py`.
 
 import streamlit as st
 from utils import *
+from modules.navbar import Navbar
 
-class Levels:
+class levels:
 
     def __init__(self) -> None:
         pass    
     
-    def setup_mainpage():
+    def setupMainPage(self):
         st.set_page_config(
             page_title="Levels",
             page_icon="💸",
+
         )
+
+        Navbar()
 
         st.title("Levels for your salaries")
 
@@ -28,10 +32,9 @@ class Levels:
             **👈 You can select one of the views from the sidebar**\n
 
             Source of all data 
-            [Eurostat]
-            (https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en).
+            [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en).
         """
         )
 
 
-LEVELS = Levels().setup_mainpage()
+LEVELS = levels().setupMainPage()

@@ -3,3 +3,4 @@ streamlit
 bs4
 numpy
 requests
+st-pages

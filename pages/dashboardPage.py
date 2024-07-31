@@ -3,9 +3,12 @@ import altair as alt
 import pandas as pd
 import numpy as np
 import utils
+from modules.navbar import Navbar
 
 
 st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
+
+Navbar()
 
 st.title("📊 Dashboard")
 

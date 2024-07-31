@@ -2,8 +2,11 @@ import streamlit as st
 import utils
 import time
 import pandas as pd
+from modules.navbar import Navbar
 
 st.set_page_config(page_title="Europe Data", page_icon="🇪🇺")
+
+Navbar()
 
 st.title("💶 European National Data")
 
@@ -29,10 +32,9 @@ last_rows = pd.DataFrame([_dict_data['2014-S1']], index=['2014-S1'])
 
 st.title(f"{wage_factor} Wages of European countries.")
 chart = st.line_chart(last_rows, x_label='Time Period', y_label=f'Wages ({wage_factor})')
-print(last_rows)
+
 for i in range(1, len(sessions[1:])):
     new_rows = pd.DataFrame([_dict_data[sessions[i]]], index=[sessions[i]])
-    print(new_rows)
     status_text.text("Pulling Data: %i%%" % int(100*i/(len(sessions)-2)))
     chart.add_rows(new_rows)
     progress_bar.progress(int(100*i/(len(sessions)-2)))

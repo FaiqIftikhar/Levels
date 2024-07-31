@@ -4,8 +4,11 @@ import utils
 import requests
 from streamlit_searchbox import st_searchbox
 import time
+from modules.navbar import Navbar
 
 st.set_page_config(page_title="Check your level", page_icon="📈")
+
+Navbar()
 
 st.title("📈 Enter your LEVEL!")
 

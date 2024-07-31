@@ -35,7 +35,7 @@ def read_excel_wo_warnings(file_name, sheet_name = 'Sheet 1', header = 7):
 def clean_data():
     data_cols = read_excel_wo_warnings("earn_mw_cur_spreadsheet.xlsx", sheet_name='Sheet 1', header=7).columns
     cols_to_drop = [col for col in data_cols if 'Unnamed' in col]
-    cols_to_drop += [f"{i}-S{j}" for i in range(1999, 2014) for j in range(1,3)]
+    # cols_to_drop += [f"{i}-S{j}" for i in range(1999, 2014) for j in range(1,3)]
     return read_excel_wo_warnings("earn_mw_cur_spreadsheet.xlsx", sheet_name='Sheet 1', header=7).drop(list(cols_to_drop), axis=1).drop([0, 38, 39, 40, 41, 42]).reset_index(drop=True).rename(columns={"TIME": "Country"}).replace(':', 0)
 
 
