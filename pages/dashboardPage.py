@@ -87,8 +87,10 @@ DOMAIN = DATAFILTER.filteredData[pivotSelection].unique()
 salarySelect = alt.selection_point(fields=[pivotSelection])
 salaryPie = (
     (
-        alt.Chart(DATAFILTER.filteredData, title=alt.Title('Chart to show scale of data.', 
-                                                           color="#8db6d8",
+        alt.Chart(DATAFILTER.filteredData,
+                  title=alt.Title(
+                    'Chart to show scale of data.',
+                    color="#8db6d8",
                     fontSize=30,
                     fontWeight=900))
         .mark_arc(innerRadius=50)
@@ -99,7 +101,7 @@ salaryPie = (
                 aggregate="count",
                 title="Number of Input data points",
             ),
-            
+
             color=alt.Color(
                 field=pivotSelection,
                 type="nominal",
@@ -199,12 +201,11 @@ salaryScatter = (
     .properties(width=650)
 )
 
-
+top_row = None
 if view == 'Scatter':
     top_row = salaryPie | salaryScatter
 elif view == 'Bar':
     top_row = salaryPie | salarySummary
-# bottom_row = salaryScatter
+
 st.altair_chart(top_row)
 
-# st.altair_chart(salaryScatter)
