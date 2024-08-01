@@ -5,7 +5,6 @@ This file creates the dashboard page. Generates relevant graphs to show data.
 import streamlit as st
 import altair as alt
 import pandas as pd
-import numpy as np
 from utils import calculateWageUnits, COLORS
 from modules.navbar import navBar
 
@@ -23,29 +22,27 @@ st.markdown("""
 
 class DataFiltering():
     """This class creates a filtering object on top of a dataframe. Then lets you filter the df based on filters defined in the Frontend."""
-    
-    def __init__(_self, df) -> None:
+    def __init__(self, df) -> None:
         """init function for the class."""
-        _self.df = df
-        pass
+        self.filteredData = df
 
-    def setCountry(_self, country):
+    def setCountry(self, country):
         """Sets the Country pivot on the whole data."""
-        _self.df = _self.df[_self.df['Country'] == country]
+        self.filteredData = self.filteredData[self.filteredData['Country'] == country]
 
-    def setWageUnit(_self, wageUnit):
+    def setWageUnit(self, wageUnit):
         """Sets the wage unit pivot on the whole data."""
         if wageUnit == 'Yearly':
-            _self.df['Salary'] = _self.df['Wage_Yearly']
-            _self.df['Wage Unit'] = 'Yearly'
+            self.filteredData['Salary'] = self.filteredData['Wage_Yearly']
+            self.filteredData['Wage Unit'] = 'Yearly'
         elif wageUnit == 'Monthly':
-            _self.df['Salary'] = _self.df['Wage_Monthly']
-            _self.df['Wage Unit'] = 'Monthly'
+            self.filteredData['Salary'] = self.filteredData['Wage_Monthly']
+            self.filteredData['Wage Unit'] = 'Monthly'
         elif wageUnit == 'Hourly':
-            _self.df['Salary'] = _self.df['Wage_Hourly']
-            _self.df['Wage Unit'] = 'Hourly'
+            self.filteredData['Salary'] = self.filteredData['Wage_Hourly']
+            self.filteredData['Wage Unit'] = 'Hourly'
 
-    def setHours(_self, hours):
+    def setHours(self, hours):
         """Sets the wage hours (Part time/Full time) on the whole data."""
         upperBound, lowerBound = 0, 0
         if hours == 'All':
@@ -55,7 +52,9 @@ class DataFiltering():
         elif hours == 'Part Time':
             upperBound, lowerBound = 20, 0
 
-        _self.df = _self.df[(_self.df['Number of Hours'] <= upperBound) & (_self.df['Number of Hours'] > lowerBound)]
+        self.filteredData = self.filteredData[
+            (self.filteredData['Number of Hours'] <= upperBound) & (self.filteredData['Number of Hours'] > lowerBound)
+            ]
 
 
 df = pd.read_csv("Salary_Data.csv")
@@ -79,7 +78,7 @@ pivotSelection = st.sidebar.selectbox('You can select here the key column:', opt
 
 # st.dataframe(DATAFILTER.df)
 
-DOMAIN = DATAFILTER.df[pivotSelection].unique()
+DOMAIN = DATAFILTER.filteredData[pivotSelection].unique()
 
 
 
@@ -87,7 +86,7 @@ DOMAIN = DATAFILTER.df[pivotSelection].unique()
 region_select = alt.selection_point(fields=[pivotSelection])
 region_pie = (
     (
-        alt.Chart(DATAFILTER.df)
+        alt.Chart(DATAFILTER.filteredData)
         .mark_arc(innerRadius=50)
         .encode(
             theta=alt.Theta(
@@ -111,7 +110,7 @@ region_pie = (
 
 region_summary = (
     (
-        alt.Chart(DATAFILTER.df)
+        alt.Chart(DATAFILTER.filteredData)
         .mark_bar(cornerRadiusEnd=20)
         .encode(
             xOffset=f"{pivotSelection}:N",

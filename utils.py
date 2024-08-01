@@ -2,16 +2,10 @@
 This is the utils file, it contains all the utilitarian functions, variables and constants.
 """
 
-from pandas.api.types import (
-    is_categorical_dtype,
-    is_datetime64_any_dtype,
-    is_numeric_dtype,
-    is_object_dtype,
-)
-import streamlit as st
-import pandas as pd
 import warnings
 import time
+import streamlit as st
+import pandas as pd
 
 COLORS = [
     "#aa423a",
@@ -33,13 +27,12 @@ COUNTRIES = ['Germany', 'Austria', 'Luxembourg', 'France', 'Spain', 'Portugal', 
 
 
 @st.cache_data
-def changeWagedFactor(data, wageFactor = 'Monthly'):
+def changeWagedFactor(df, wageFactor = 'Monthly'):
     """Function to change the wage factor in the dataset. Mainly used for Eurostat dataset."""
     factor = 1
     if wageFactor == 'Hourly':
         factor = 4*40
 
-    df = cleanData()
     for col in df.columns:
         if col == 'Country':
             df[col] = df[col]
@@ -52,7 +45,7 @@ def readExcelNoWarnings(fileName, sheetName = 'Sheet 1', header = 7):
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         return pd.read_excel(fileName, sheet_name=sheetName, header=header)
-    
+
 @st.cache_data
 def cleanData():
     """This function cleans all the mess in the Eurostat data and returns it."""
@@ -110,22 +103,21 @@ def showEuroStatData(countrues):
 
     sessions = list(dictData.keys())
 
-    progress_bar = st.sidebar.progress(0)
-    status_text = st.sidebar.empty()
-    last_rows = pd.DataFrame([dictData['2014-S1']], index=['2014-S1'])
+    progressBar = st.sidebar.progress(0)
+    statusText = st.sidebar.empty()
+    lastRows = pd.DataFrame([dictData['2014-S1']], index=['2014-S1'])
 
     st.title(f"{wageFactor} Wages of European countries.")
-    chart = st.line_chart(last_rows, x_label='Time Period', y_label=f'Wages ({wageFactor})')
+    chart = st.line_chart(lastRows, x_label='Time Period', y_label=f'Wages ({wageFactor})')
 
     for i in range(1, len(sessions[1:])):
         new_rows = pd.DataFrame([dictData[sessions[i]]], index=[sessions[i]])
-        status_text.text("Pulling Data: %i%%" % int(100*i/(len(sessions)-2)))
+        statusText.text(f"Pulling Data: {int(100*i/(len(sessions)-2))}%")
         chart.add_rows(new_rows)
-        progress_bar.progress(int(100*i/(len(sessions)-2)))
+        progressBar.progress(int(100*i/(len(sessions)-2)))
         time.sleep(0.05)
 
-    progress_bar.empty()
+    progressBar.empty()
     st.button("Re-run")
 
     st.markdown("""Data from [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en)""")
-
