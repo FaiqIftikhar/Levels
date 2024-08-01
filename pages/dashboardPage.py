@@ -19,6 +19,7 @@ st.markdown("""
             **This page can tell you an interesting story ⛩️**
             """)
 
+view = st.sidebar.radio("Select how you want to see data: ", options=['Scatter', 'Bar'], index=0, horizontal=True)
 
 class DataFiltering():
     """This class creates a filtering object on top of a dataframe. Then lets you filter the df based on filters defined in the Frontend."""
@@ -86,7 +87,10 @@ DOMAIN = DATAFILTER.filteredData[pivotSelection].unique()
 salarySelect = alt.selection_point(fields=[pivotSelection])
 salaryPie = (
     (
-        alt.Chart(DATAFILTER.filteredData)
+        alt.Chart(DATAFILTER.filteredData, title=alt.Title('Chart to show scale of data.', 
+                                                           color="#8db6d8",
+                    fontSize=30,
+                    fontWeight=900))
         .mark_arc(innerRadius=50)
         .encode(
             theta=alt.Theta(
@@ -95,6 +99,7 @@ salaryPie = (
                 aggregate="count",
                 title="Number of Input data points",
             ),
+            
             color=alt.Color(
                 field=pivotSelection,
                 type="nominal",
@@ -105,7 +110,7 @@ salaryPie = (
         )
     )
     .add_params(salarySelect)
-    .properties(width=300)
+    .properties(width=325)
 )
 
 salarySummary = (
@@ -134,7 +139,7 @@ salarySummary = (
                     direction="vertical",
                     orient='right',
                     titleColor="#8db6d8",
-                    titleFontSize=35,
+                    titleFontSize=30,
                     titleFontWeight=900,
                     titleLimit=200,
                     titleLineHeight=10,
@@ -174,8 +179,20 @@ salaryScatter = (
             color=alt.Color(
                 pivotSelection,
                 type="nominal",
-                scale=alt.Scale(domain=DOMAIN, range=COLORS)
-            ).legend(None)
+                scale=alt.Scale(domain=DOMAIN, range=COLORS),
+                legend=alt.Legend(
+                    direction="vertical",
+                    orient='right',
+                    titleColor="#8db6d8",
+                    titleFontSize=30,
+                    titleFontWeight=900,
+                    titleLimit=200,
+                    titleLineHeight=10,
+                    rowPadding=10,
+                    symbolType="circle",
+                    tickCount=4,
+                ),
+            )
         )
     )
     .transform_filter(salarySelect)
@@ -183,8 +200,11 @@ salaryScatter = (
 )
 
 
-top_row = salaryPie | salarySummary
-bottom_row = salaryScatter
-st.altair_chart(top_row & bottom_row)
+if view == 'Scatter':
+    top_row = salaryPie | salaryScatter
+elif view == 'Bar':
+    top_row = salaryPie | salarySummary
+# bottom_row = salaryScatter
+st.altair_chart(top_row)
 
 # st.altair_chart(salaryScatter)
