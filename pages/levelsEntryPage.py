@@ -58,13 +58,13 @@ with col1:
 
     match experience:
         case '0-1 Years':
-            level = 'Fresh Graduate'
+            LEVEL = 'Fresh Graduate'
         case '1-3 Years':
-            level = 'Junior'
+            LEVEL = 'Junior'
         case '4-6 Years':
-            level = 'Associate'
+            LEVEL = 'Associate'
         case '7+ Years':
-            level = 'Senior'
+            LEVEL = 'Senior'
 
     salary = st.number_input("Please enter your salary: ", min_value=1, max_value=100000000)
     wageUnit = st.radio("Is the salary Hourly/Monthly/Yearly?", options=['Hourly', 'Monthly', 'Yearly'], horizontal=True)
@@ -100,6 +100,6 @@ with col2:
 
 st.button(":green[Save data ➡️]",
             on_click=checkDataValidation,
-            args=([country, CITY, company, jobTitle, tag, numberOfHours, "Euro", gender, salary, wageUnit, experience, level],),
+            args=([country, CITY, company, jobTitle, tag, numberOfHours, "Euro", gender, salary, wageUnit, experience, LEVEL],),
             use_container_width=True
         )

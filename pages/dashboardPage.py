@@ -22,9 +22,9 @@ st.markdown("""
 
 class DataFiltering():
     """This class creates a filtering object on top of a dataframe. Then lets you filter the df based on filters defined in the Frontend."""
-    def __init__(self, df) -> None:
+    def __init__(self, dataFrame) -> None:
         """init function for the class."""
-        self.filteredData = df
+        self.filteredData = dataFrame
 
     def setCountry(self, country):
         """Sets the Country pivot on the whole data."""

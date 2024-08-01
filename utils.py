@@ -111,9 +111,9 @@ def showEuroStatData(countrues):
     chart = st.line_chart(lastRows, x_label='Time Period', y_label=f'Wages ({wageFactor})')
 
     for i in range(1, len(sessions[1:])):
-        new_rows = pd.DataFrame([dictData[sessions[i]]], index=[sessions[i]])
+        newRows = pd.DataFrame([dictData[sessions[i]]], index=[sessions[i]])
         statusText.text(f"Pulling Data: {int(100*i/(len(sessions)-2))}%")
-        chart.add_rows(new_rows)
+        chart.add_rows(newRows)
         progressBar.progress(int(100*i/(len(sessions)-2)))
         time.sleep(0.05)
 
