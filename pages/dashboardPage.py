@@ -83,8 +83,8 @@ DOMAIN = DATAFILTER.filteredData[pivotSelection].unique()
 
 
 
-region_select = alt.selection_point(fields=[pivotSelection])
-region_pie = (
+salarySelect = alt.selection_point(fields=[pivotSelection])
+salaryPie = (
     (
         alt.Chart(DATAFILTER.filteredData)
         .mark_arc(innerRadius=50)
@@ -101,14 +101,14 @@ region_pie = (
                 scale=alt.Scale(domain=DOMAIN, range=COLORS),
                 title=pivotSelection,
             ),
-            opacity=alt.condition(region_select, alt.value(1), alt.value(0.25)),
+            opacity=alt.condition(salarySelect, alt.value(1), alt.value(0.25)),
         )
     )
-    .add_params(region_select)
+    .add_params(salarySelect)
     .properties(width=300)
 )
 
-region_summary = (
+salarySummary = (
     (
         alt.Chart(DATAFILTER.filteredData)
         .mark_bar(cornerRadiusEnd=20)
@@ -125,6 +125,7 @@ region_summary = (
                 aggregate="mean",
                 title="Average Salary"
             ),
+            tooltip=["Level", "Salary", pivotSelection],
             color=alt.Color(
                 pivotSelection,
                 type="nominal",
@@ -144,10 +145,46 @@ region_summary = (
             ),
         )
     )
-    .transform_filter(region_select)
+    .transform_filter(salarySelect)
+    .properties(width=650)
+)
+
+# st.write([i+1 for i in range(0,len(DATAFILTER.filteredData[pivotSelection]))])
+
+salaryScatter = (
+    (
+        alt.Chart(DATAFILTER.filteredData)
+        .mark_circle(size=20)
+        .encode(
+            # xOffset=f"{pivotSelection}:N",
+            x=alt.X(
+                "Years",
+                type="quantitative",
+                # sort=['Fresh Graduate', 'Junior', 'Associate', 'Senior']
+            ),
+            y=alt.Y(
+                field="Salary",
+                type="quantitative",
+                aggregate="mean",
+                title="Average Salary",
+                sort="-y"
+            ),
+            size=alt.Size(pivotSelection, legend=None, scale=alt.Scale(range=[100, 500])),
+            tooltip=["Years", "Salary", pivotSelection],
+            color=alt.Color(
+                pivotSelection,
+                type="nominal",
+                scale=alt.Scale(domain=DOMAIN, range=COLORS)
+            ).legend(None)
+        )
+    )
+    .transform_filter(salarySelect)
     .properties(width=650)
 )
 
 
-top_row = region_pie | region_summary
-st.altair_chart(top_row)
+top_row = salaryPie | salarySummary
+bottom_row = salaryScatter
+st.altair_chart(top_row & bottom_row)
+
+# st.altair_chart(salaryScatter)
