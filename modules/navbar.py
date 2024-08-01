@@ -1,7 +1,11 @@
+"""
+A simple module/method to create the navbor links and connect them to the relevant Python file.
+"""
 import streamlit as st
 
 
-def Navbar():
+def navBar():
+    """This function creates the navbar links."""
     with st.sidebar:
         st.page_link('levelsModule.py', label='Levels', icon='🔥')
         st.page_link('pages/dashboardPage.py', label='Dashboard', icon='📊')

@@ -1,3 +1,7 @@
+"""
+This is the utils file, it contains all the utilitarian functions, variables and constants.
+"""
+
 from pandas.api.types import (
     is_categorical_dtype,
     is_datetime64_any_dtype,
@@ -6,19 +10,36 @@ from pandas.api.types import (
 )
 import streamlit as st
 import pandas as pd
-import numpy as np
 import warnings
+import time
+
+COLORS = [
+    "#aa423a",
+    "#f6b404",
+    "#327a88",
+    "#303e55",
+    "#c7ab84",
+    "#b1dbaa",
+    "#feeea5",
+    "#3e9a14",
+    "#6e4e92",
+    "#c98149",
+    "#d1b844",
+    "#8db6d8",
+]
+
 
 COUNTRIES = ['Germany', 'Austria', 'Luxembourg', 'France', 'Spain', 'Portugal', 'Netherlands']
 
 
 @st.cache_data
-def change_waged_factor(data, wage_factor = 'Monthly'):
+def changeWagedFactor(data, wageFactor = 'Monthly'):
+    """Function to change the wage factor in the dataset. Mainly used for Eurostat dataset."""
     factor = 1
-    if wage_factor == 'Hourly':
+    if wageFactor == 'Hourly':
         factor = 4*40
 
-    df = clean_data()
+    df = cleanData()
     for col in df.columns:
         if col == 'Country':
             df[col] = df[col]
@@ -26,91 +47,85 @@ def change_waged_factor(data, wage_factor = 'Monthly'):
             df[col] = (df[col] / factor).round(2)
     return df
 
-def read_excel_wo_warnings(file_name, sheet_name = 'Sheet 1', header = 7):
+def readExcelNoWarnings(fileName, sheetName = 'Sheet 1', header = 7):
+    """This function is just there to suppress any warning while reading excel files."""
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        return pd.read_excel("earn_mw_cur_spreadsheet.xlsx", sheet_name=sheet_name, header=header)
+        return pd.read_excel(fileName, sheet_name=sheetName, header=header)
     
 @st.cache_data
-def clean_data():
-    data_cols = read_excel_wo_warnings("earn_mw_cur_spreadsheet.xlsx", sheet_name='Sheet 1', header=7).columns
-    cols_to_drop = [col for col in data_cols if 'Unnamed' in col]
+def cleanData():
+    """This function cleans all the mess in the Eurostat data and returns it."""
+    columnsData = readExcelNoWarnings("earn_mw_cur_spreadsheet.xlsx", sheetName='Sheet 1', header=7).columns
+    columnsToDrop = [col for col in columnsData if 'Unnamed' in col]
     # cols_to_drop += [f"{i}-S{j}" for i in range(1999, 2014) for j in range(1,3)]
-    return read_excel_wo_warnings("earn_mw_cur_spreadsheet.xlsx", sheet_name='Sheet 1', header=7).drop(list(cols_to_drop), axis=1).drop([0, 38, 39, 40, 41, 42]).reset_index(drop=True).rename(columns={"TIME": "Country"}).replace(':', 0)
+    return readExcelNoWarnings("earn_mw_cur_spreadsheet.xlsx",
+                               sheetName='Sheet 1',
+                               header=7
+            ).drop(
+                list(columnsToDrop), axis=1
+            ).drop(
+                [0, 38, 39, 40, 41, 42]
+            ).reset_index(
+                drop=True
+            ).rename(
+                columns={"TIME": "Country"}
+            ).replace(':', 0)
 
 
+def calculateWageUnits(df):
+    """This function lets you calulate other wage units in the dataset, that the user never provided."""
+    wageYearly, wageMonthly, wageHourly = [], [], []
 
-def filter_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Adds a UI on top of a dataframe to let viewers filter columns
+    for _, rows in df.iterrows():
+        if rows['Wage Unit'] == 'Yearly':
+            wageYearly.append(rows['Salary'])
+            wageMonthly.append(rows['Salary']/12)
+            wageHourly.append(rows['Salary']/(52.143*rows['Number of Hours']))
+        elif rows['Wage Unit'] == 'Monthly':
+            wageYearly.append(rows['Salary']*12)
+            wageMonthly.append(rows['Salary'])
+            wageHourly.append(rows['Salary']/(4.345*(rows['Number of Hours'])))
+        elif rows['Wage Unit'] == 'Hourly':
+            wageYearly.append(rows['Salary']*(52.143*rows['Number of Hours']))
+            wageMonthly.append(rows['Salary']*(4.345*rows['Number of Hours']))
+            wageHourly.append(rows['Salary'])
 
-    Args:
-        df (pd.DataFrame): Original dataframe
-
-    Returns:
-        pd.DataFrame: Filtered dataframe
-    """
-    modify = st.checkbox("Add filters")
-
-    if not modify:
-        return df
-
-    df = df.copy()
-
-    # Try to convert datetimes into a standard format (datetime, no timezone)
-    for col in df.columns:
-        if is_object_dtype(df[col]):
-            try:
-                df[col] = pd.to_datetime(df[col])
-            except Exception:
-                pass
-
-        if is_datetime64_any_dtype(df[col]):
-            df[col] = df[col].dt.tz_localize(None)
-
-    modification_container = st.container()
-
-    with modification_container:
-        to_filter_columns = st.multiselect("Filter dataframe on", df.columns)
-        for column in to_filter_columns:
-            left, right = st.columns((1, 20))
-            # Treat columns with < 10 unique values as categorical
-            if is_categorical_dtype(df[column]) or df[column].nunique() < 10:
-                user_cat_input = right.multiselect(
-                    f"Values for {column}",
-                    df[column].unique(),
-                    default=list(df[column].unique()),
-                )
-                df = df[df[column].isin(user_cat_input)]
-            elif is_numeric_dtype(df[column]):
-                _min = float(df[column].min())
-                _max = float(df[column].max())
-                step = (_max - _min) / 100
-                user_num_input = right.slider(
-                    f"Values for {column}",
-                    min_value=_min,
-                    max_value=_max,
-                    value=(_min, _max),
-                    step=step,
-                )
-                df = df[df[column].between(*user_num_input)]
-            elif is_datetime64_any_dtype(df[column]):
-                user_date_input = right.date_input(
-                    f"Values for {column}",
-                    value=(
-                        df[column].min(),
-                        df[column].max(),
-                    ),
-                )
-                if len(user_date_input) == 2:
-                    user_date_input = tuple(map(pd.to_datetime, user_date_input))
-                    start_date, end_date = user_date_input
-                    df = df.loc[df[column].between(start_date, end_date)]
-            else:
-                user_text_input = right.text_input(
-                    f"Substring or regex in {column}",
-                )
-                if user_text_input:
-                    df = df[df[column].astype(str).str.contains(user_text_input)]
-
+    df['Wage_Monthly'], df['Wage_Yearly'], df['Wage_Hourly'] = wageMonthly, wageYearly, wageHourly
+    df['OG_Salary'] = df['Salary']
+    df['OG_Wage_Unit'] = df['Wage Unit']
     return df
+
+
+def showEuroStatData(countrues):
+    """This function is used in europeDataPage.py, to show the Eurostat data in a cool way."""
+    wageFactor = 'Hourly'
+    data = cleanData()
+    data = changeWagedFactor(data, wageFactor)
+    data = data[data['Country'].isin(countrues)].reset_index(drop=True).T
+    newHeader = data.iloc[0]
+    data = data[1:]
+    data.columns = newHeader
+    dictData = data.T.to_dict()
+
+    sessions = list(dictData.keys())
+
+    progress_bar = st.sidebar.progress(0)
+    status_text = st.sidebar.empty()
+    last_rows = pd.DataFrame([dictData['2014-S1']], index=['2014-S1'])
+
+    st.title(f"{wageFactor} Wages of European countries.")
+    chart = st.line_chart(last_rows, x_label='Time Period', y_label=f'Wages ({wageFactor})')
+
+    for i in range(1, len(sessions[1:])):
+        new_rows = pd.DataFrame([dictData[sessions[i]]], index=[sessions[i]])
+        status_text.text("Pulling Data: %i%%" % int(100*i/(len(sessions)-2)))
+        chart.add_rows(new_rows)
+        progress_bar.progress(int(100*i/(len(sessions)-2)))
+        time.sleep(0.05)
+
+    progress_bar.empty()
+    st.button("Re-run")
+
+    st.markdown("""Data from [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en)""")
+
