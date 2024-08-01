@@ -201,11 +201,10 @@ salaryScatter = (
     .properties(width=650)
 )
 
-top_row = None
+TOPROW = None
 if view == 'Scatter':
-    top_row = salaryPie | salaryScatter
+    TOPROW = salaryPie | salaryScatter
 elif view == 'Bar':
-    top_row = salaryPie | salarySummary
+    TOPROW = salaryPie | salarySummary
 
-st.altair_chart(top_row)
-
+st.altair_chart(TOPROW)
