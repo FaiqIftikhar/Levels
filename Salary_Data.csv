@@ -1,7 +1,7 @@
 Country,City,Company,Job Title,Tag,Number of Hours,Currency,Gender,Salary,Wage Unit,Years of Experience,Level,Years
 Germany,Saarbrücken,Natif.ai,Machine Learning Engineer,Machine Learning,40,Euro,Male,45000,Yearly,4-6 Years,Associate,4.1
 Germany,Saarbrücken,imc Learning,Senior Software Engineer,Full Stack,40,Euro,Male,73000,Yearly,7+ Years,Senior,8.8
-Germany,Saarbrücken,ZF Group,Software Engineer,Backend,40,Euro,Prefer not to say,73060,Yearly,7+ Years,Senior,9
+Germany,Saarbrücken,ZF Group,Software Engineer,Backend,40,Euro,Prefer not to say,73060,Yearly,7+ Years,Senior,9.0
 Germany,Saarbrücken,Neocosmo,Software Engineer,Full Stack,40,Euro,Female,60000,Yearly,0-1 Years,Fresh Graduate,0.9
 Germany,Saarbrücken,Max Planck Institute,Post Doctorate,Artificial Intelligence,40,Euro,Female,59661,Yearly,4-6 Years,Associate,5.6
 Germany,Saarbrücken,DFKI,Software Engineer,Data Science,40,Euro,Male,50000,Yearly,0-1 Years,Fresh Graduate,0.75
@@ -17,7 +17,7 @@ Germany,Munich,Avelios Medical,Working Student,Frontend,20,Euro,Prefer not to sa
 Germany,Munich,Stadtwerke Munchen,Working Student,Full Stack,20,Euro,Prefer not to say,1560,Monthly,1-3 Years,Junior,2.9
 Germany,Munich,Leukocare,Working Student,DevOps,20,Euro,Prefer not to say,1473,Monthly,1-3 Years,Junior,1.9
 Germany,Munich,Rohde & Schwarz,Software Engineer,Backend,20,Euro,Male,2167,Monthly,1-3 Years,Junior,2.4
-Germany,Berlin,IBM,Frontend Software Engineer,Mobile Dev,20,Euro,Male,2167,Monthly,0-1 Years,Fresh Graduate,0.20
+Germany,Berlin,IBM,Frontend Software Engineer,Mobile Dev,20,Euro,Male,2167,Monthly,0-1 Years,Fresh Graduate,0.2
 Germany,Hamburg,Adobe,Software Engineer,Backend,20,Euro,Male,15,Hourly,1-3 Years,Junior,2.3
 Germany,Remscheid,Vaillant,Working Student,Backend,20,Euro,Male,1389,Monthly,1-3 Years,Junior,1.7
 Germany,Munich,Brainlab,Working Student,Frontend,20,Euro,Female,14000,Yearly,1-3 Years,Junior,1.9
@@ -41,3 +41,4 @@ Germany,Saarbrücken,Max Planck Institute,Working Student,Academia,20,Euro,Femal
 Germany,Berlin,Zalando,Working Student,Full Stack,20,Euro,Male,18,Hourly,0-1 Years,Fresh Graduate,0.45
 Germany,Saarbrücken,Software AG,Working Student,Full Stack,20,Euro,Male,13,Hourly,0-1 Years,Fresh Graduate,0.8
 Germany,Saarbrücken,Plan Software,Working Student,Frontend,20,Euro,Female,14,Hourly,0-1 Years,Fresh Graduate,0.7
+Germany,Köln,Next Kraftwerke,Software Engineer,Full Stack,40,Euro,Male,73000,Yearly,1-3 Years,Junior,3.0

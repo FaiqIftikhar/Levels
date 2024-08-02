@@ -23,7 +23,7 @@ COLORS = [
 ]
 
 
-COUNTRIES = ['Germany', 'Austria', 'Luxembourg', 'France', 'Spain', 'Portugal', 'Netherlands']
+COUNTRIES = ['Germany', 'United Kingdom', 'Luxembourg', 'France', 'Spain', 'Portugal', 'Netherlands']
 
 
 @st.cache_data
@@ -108,7 +108,7 @@ def showEuroStatData(countrues):
     lastRows = pd.DataFrame([dictData['2014-S1']], index=['2014-S1'])
 
     st.title(f"{wageFactor} Wages of European countries.")
-    chart = st.line_chart(lastRows, x_label='Time Period', y_label=f'Wages ({wageFactor})')
+    chart = st.line_chart(lastRows, x_label='Time Period', y_label=f'Wages ({wageFactor})', width=500, height=400)
 
     for i in range(1, len(sessions[1:])):
         newRows = pd.DataFrame([dictData[sessions[i]]], index=[sessions[i]])

@@ -2,6 +2,7 @@
 This page creates the form to enter wage data into the DB.
 """
 import time
+import random
 import streamlit as st
 import pandas as pd
 import requests
@@ -33,7 +34,7 @@ def checkDataValidation(dataRow):
     else:
         st.toast("Saving data...", icon="⌛")
         df = pd.DataFrame([dataRow],
-            columns=['Country', 'City', 'Company', 'Job Title', 'Tag', 'Number of Hours', 'Currency', 'Gender', 'Salary', 'Wage Unit', 'Years of Experience', 'Level']
+            columns=['Country', 'City', 'Company', 'Job Title', 'Tag', 'Number of Hours', 'Currency', 'Gender', 'Salary', 'Wage Unit', 'Years of Experience', 'Level', 'Years']
             )
         originalDataframe = pd.read_csv("Salary_Data.csv")
         originalDataframe = pd.concat([originalDataframe, df], axis=0).reset_index(drop=True)
@@ -97,9 +98,13 @@ with col2:
         "Please select a gender:", options=['Female', 'Male', 'Prefer not to say'], horizontal=True
     )
 
+    yearsLowerBound = int(experience[0])
+    yearsUpperBound = 12 if int(experience[0]) == 7 else int(experience[2])
+
+    YEARS = round(random.uniform(yearsLowerBound, yearsUpperBound), 2)
 
 st.button(":green[Save data ➡️]",
             on_click=checkDataValidation,
-            args=([country, CITY, company, jobTitle, tag, numberOfHours, "Euro", gender, salary, wageUnit, experience, LEVEL],),
+            args=([country, CITY, company, jobTitle, tag, numberOfHours, "Euro", gender, salary, wageUnit, experience, LEVEL, YEARS],),
             use_container_width=True
         )
