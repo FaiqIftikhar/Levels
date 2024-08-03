@@ -215,8 +215,8 @@ salaryScatter = (
                 pivotSelection, legend=None, scale=alt.Scale(range=[100, 500])
             ),
             tooltip=["Years", "Salary", pivotSelection],
-            color=GRAPHCOLORS
-        ),
+            color=GRAPHCOLORS,
+        )
     )
     .transform_filter(salarySelect)
     .properties(width=650)

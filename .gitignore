@@ -7,3 +7,5 @@ data_cleansing.ipynb
 
 Salary Data.xlsx
 Salary_Data.csv
+
+.github\workflows\super-linter.yml
