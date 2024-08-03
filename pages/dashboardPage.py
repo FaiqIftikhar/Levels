@@ -4,9 +4,8 @@ This file creates the dashboard page. Generates relevant graphs to show data.
 
 import streamlit as st
 import altair as alt
-import pandas as pd
 from utils import calculateWageUnits, COLORS
-from backend.database import database
+from backend.database import Database
 from modules.navbar import navBar
 
 
@@ -21,7 +20,7 @@ st.markdown("""
             👈 Choose filters from the sidebar.
             """)
 
-DATABASE = database()
+DATABASE = Database()
 
 view = st.sidebar.radio("Select how you want to see data: ", options=['Scatter', 'Bar'], index=0, horizontal=True)
 

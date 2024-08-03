@@ -7,42 +7,47 @@ import streamlit as st
 import pandas as pd
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
-from utils import DATABASECOLUMNS
 from dotenv import load_dotenv
+from utils import DATABASECOLUMNS
 
 load_dotenv()
 
-class database():
+class Database():
+    """This class serves as a database instead of using CSVs/Excels.
+     
+       It connects to Azure and manages the data in the table."""
 
     def __init__(self) -> None:
+        """Constructor for the Database class."""
         self.tableName = 'app_data'
         self.insertionMethod = 'append'
-        self.KVName = os.getenv('KVName')
-        self.DBName = os.getenv('DBName')
-        # self.dataRead = False
-        pass
+        self.kvName = os.getenv('KVName')
+        self.dbName = os.getenv('DBName')
+        
 
     def getKeyVaultSecret(self, secretName: str):
-        # keyVaultName = "levels-password"
-        KVUri = f"https://{self.KVName}.vault.azure.net"
+        """This function gets the necassary secret, required to establish the connection."""
+        kvUri = f"https://{self.kvName}.vault.azure.net"
 
         credential = DefaultAzureCredential()
-        client = SecretClient(vault_url=KVUri, credential=credential)
+        client = SecretClient(vault_url=kvUri, credential=credential)
 
 
-        return client.get_secret(secretName).value    # "levels-db-connection"
+        return client.get_secret(secretName).value
 
     def createDatabaseConnection(self):
-        connection_url = URL.create(
+        """This function establishes the connection to Azure Database."""
+        connectionUrl = URL.create(
             "mssql+pyodbc", 
-            query={"odbc_connect": self.getKeyVaultSecret(self.DBName)}
+            query={"odbc_connect": self.getKeyVaultSecret(self.dbName)}
         )
 
-        return create_engine(connection_url)
-    
-    def addRowToTable(self, Row):
+        return create_engine(connectionUrl)
+
+    def addRowToTable(self, row):
+        """This function adds the `row` to the table in DB."""
         return pd.DataFrame(
-            data = [Row],
+            data = [row],
             columns = DATABASECOLUMNS
         ).to_sql(
             name = self.tableName,
@@ -50,10 +55,10 @@ class database():
             if_exists = self.insertionMethod,
             index=False
             )
+    # pylint: disable=no-self-use
     @st.cache_data
     def getTableAsDataFrame(_self):
         return pd.read_sql(
             f"Select * from {_self.tableName}",
             con=_self.createDatabaseConnection()
             )
-

@@ -4,10 +4,9 @@ This page creates the form to enter wage data into the DB.
 import time
 import random
 import streamlit as st
-import pandas as pd
 import requests
 from utils import COUNTRIES
-from backend.database import database
+from backend.database import Database
 from modules.navbar import navBar
 
 st.set_page_config(page_title="Check your level", page_icon="📈")
@@ -20,7 +19,7 @@ st.markdown("""
             This page lets you enter your wages, for a more rich experience. 
             """)
 
-DATABASE = database()
+DATABASE = Database()
 
 
 def checkDataValidation(dataRow):
