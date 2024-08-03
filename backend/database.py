@@ -23,7 +23,7 @@ class Database():
         self.insertionMethod = 'append'
         self.kvName = os.getenv('KVName')
         self.dbName = os.getenv('DBName')
-        
+
 
     def getKeyVaultSecret(self, secretName: str):
         """This function gets the necassary secret, required to establish the connection."""
@@ -55,9 +55,10 @@ class Database():
             if_exists = self.insertionMethod,
             index=False
             )
-    # pylint: disable=no-self-use
+    # pylint: disable=no-self-argument
     @st.cache_data
     def getTableAsDataFrame(_self):
+        """This function reads the table into a dataframe and returns it."""
         return pd.read_sql(
             f"Select * from {_self.tableName}",
             con=_self.createDatabaseConnection()
