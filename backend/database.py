@@ -19,11 +19,10 @@ class Database():
 
     def __init__(self) -> None:
         """Constructor for the Database class."""
-        self.tableName = 'app_data'
-        self.insertionMethod = 'append'
-        self.kvName = os.getenv('KVName')
-        self.dbName = os.getenv('DBName')
-
+        self.tableName = "app_data"
+        self.insertionMethod = "append"
+        self.kvName = os.getenv("KVNAME")
+        self.dbName = os.getenv("DBNAME")
 
     def getKeyVaultSecret(self, secretName: str):
         """This function gets the necassary secret, required to establish the connection."""
@@ -32,34 +31,29 @@ class Database():
         credential = DefaultAzureCredential()
         client = SecretClient(vault_url=kvUri, credential=credential)
 
-
         return client.get_secret(secretName).value
 
     def createDatabaseConnection(self):
         """This function establishes the connection to Azure Database."""
         connectionUrl = URL.create(
-            "mssql+pyodbc", 
-            query={"odbc_connect": self.getKeyVaultSecret(self.dbName)}
+            "mssql+pyodbc", query={"odbc_connect": self.getKeyVaultSecret(self.dbName)}
         )
 
         return create_engine(connectionUrl)
 
     def addRowToTable(self, row):
         """This function adds the `row` to the table in DB."""
-        return pd.DataFrame(
-            data = [row],
-            columns = DATABASECOLUMNS
-        ).to_sql(
+        return pd.DataFrame(data = [row], columns = DATABASECOLUMNS).to_sql(
             name = self.tableName,
             con = self.createDatabaseConnection(),
             if_exists = self.insertionMethod,
             index=False
             )
+
     # pylint: disable=no-self-argument
     @st.cache_data
     def getTableAsDataFrame(_self):
         """This function reads the table into a dataframe and returns it."""
         return pd.read_sql(
-            f"Select * from {_self.tableName}",
-            con=_self.createDatabaseConnection()
-            )
+            f"Select * from {_self.tableName}", con=_self.createDatabaseConnection()
+        )

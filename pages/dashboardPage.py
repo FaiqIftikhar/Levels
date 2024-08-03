@@ -15,50 +15,60 @@ navBar()
 
 st.title("📊 Dashboard")
 
-st.markdown("""
+st.markdown(
+    """
             **This page can tell you an interesting story ⛩️.**\n
             👈 Choose filters from the sidebar.
-            """)
+            """
+)
 
 DATABASE = Database()
 
-view = st.sidebar.radio("Select how you want to see data: ", options=['Scatter', 'Bar'], index=0, horizontal=True)
+view = st.sidebar.radio(
+    "Select how you want to see data: ",
+    options=['Scatter', 'Bar'],
+    index=0,
+    horizontal=True,
+)
 
-class DataFiltering():
+
+class DataFiltering:
     """This class creates a filtering object on top of a dataframe. Then lets you filter the df based on filters defined in the Frontend."""
+
     def __init__(self, dataFrame) -> None:
         """init function for the class."""
         self.filteredData = dataFrame
 
     def setCountry(self, country):
         """Sets the Country pivot on the whole data."""
-        self.filteredData = self.filteredData[self.filteredData['Country'] == country]
+        self.filteredData = self.filteredData[self.filteredData["Country"] == country]
 
     def setWageUnit(self, wageUnit):
         """Sets the wage unit pivot on the whole data."""
-        if wageUnit == 'Yearly':
-            self.filteredData['Salary'] = self.filteredData['Wage_Yearly']
-            self.filteredData['Wage Unit'] = 'Yearly'
-        elif wageUnit == 'Monthly':
-            self.filteredData['Salary'] = self.filteredData['Wage_Monthly']
-            self.filteredData['Wage Unit'] = 'Monthly'
-        elif wageUnit == 'Hourly':
-            self.filteredData['Salary'] = self.filteredData['Wage_Hourly']
-            self.filteredData['Wage Unit'] = 'Hourly'
+        if wageUnit == "Yearly":
+            self.filteredData["Salary"] = self.filteredData["Wage_Yearly"]
+            self.filteredData["Wage Unit"] = "Yearly"
+        elif wageUnit == "Monthly":
+            self.filteredData["Salary"] = self.filteredData["Wage_Monthly"]
+            self.filteredData["Wage Unit"] = "Monthly"
+        elif wageUnit == "Hourly":
+            self.filteredData["Salary"] = self.filteredData["Wage_Hourly"]
+            self.filteredData["Wage Unit"] = "Hourly"
 
     def setHours(self, hours):
         """Sets the wage hours (Part time/Full time) on the whole data."""
         upperBound, lowerBound = 0, 0
-        if hours == 'All':
+        if hours == "All":
             upperBound, lowerBound = 60, 0
-        elif hours == 'Full Time':
+        elif hours == "Full Time":
             upperBound, lowerBound = 40, 20
-        elif hours == 'Part Time':
+        elif hours == "Part Time":
             upperBound, lowerBound = 20, 0
 
         self.filteredData = self.filteredData[
-            (self.filteredData['Number of Hours'] <= upperBound) & (self.filteredData['Number of Hours'] > lowerBound)
-            ]
+            (self.filteredData['Number of Hours'] <= upperBound)
+            & (self.filteredData['Number of Hours'] > lowerBound)
+        ]
 
 
 # df = pd.read_csv("Salary_Data.csv")
@@ -69,16 +79,35 @@ df = calculateWageUnits(df)
 
 DATAFILTER = DataFiltering(df)
 
-countrySelection = st.sidebar.selectbox('You can select the country here:', options=list(df['Country'].unique()) + ['Bolivia', 'Denmark'], index= 0, key='countrySelection')
+countrySelection = st.sidebar.selectbox(
+    "You can select the country here:",
+    options=list(df["Country"].unique()) + ["Bolivia", "Denmark"],
+    index= 0,
+    key="countrySelection",
+)
 DATAFILTER.setCountry(countrySelection)
 
-wageUnitSelection = st.sidebar.selectbox('You can select wage unit here:', options=['Yearly', 'Monthly', 'Hourly'], index=0, key = 'wageUnitSelection')
+wageUnitSelection = st.sidebar.selectbox(
+    "You can select wage unit here:",
+    options=["Yearly", "Monthly", "Hourly"],
+    index=0,
+    key = "wageUnitSelection",
+)
 DATAFILTER.setWageUnit(wageUnitSelection)
 
-workHoursSelection = st.sidebar.selectbox('You can select working hours here:', options=['Full Time', 'Part Time'], index=0, key = 'workHoursSelection')
+workHoursSelection = st.sidebar.selectbox(
+    "You can select working hours here:",
+    options=["Full Time", "Part Time"],
+    index=0,
+    key = "workHoursSelection",
+)
 DATAFILTER.setHours(workHoursSelection)
 
-pivotSelection = st.sidebar.selectbox('You can select here the key column:', options=['City', 'Gender', 'Job Title', 'Tag'], key = 'pivotSelection')
+pivotSelection = st.sidebar.selectbox(
+    "You can select here the key column:",
+    options=["City", "Gender", "Job Title", "Tag"],
+    key = "pivotSelection",
+)
 
 
 # st.dataframe(DATAFILTER.df)
@@ -86,17 +115,18 @@ pivotSelection = st.sidebar.selectbox('You can select here the key column:', opt
 DOMAIN = DATAFILTER.filteredData[pivotSelection].unique()
 
 
-
-
 salarySelect = alt.selection_point(fields=[pivotSelection])
 salaryPie = (
     (
-        alt.Chart(DATAFILTER.filteredData,
-                  title=alt.Title(
-                    'Chart to show scale of data.',
-                    color="#8db6d8",
-                    fontSize=30,
-                    fontWeight=900))
+        alt.Chart(
+            DATAFILTER.filteredData,
+            title=alt.Title(
+                "Chart to show scale of data.",
+                color="#8db6d8",
+                fontSize=30,
+                fontWeight=900,
+            )
+        )
         .mark_arc(innerRadius=50)
         .encode(
             theta=alt.Theta(
@@ -105,7 +135,6 @@ salaryPie = (
                 aggregate="count",
                 title="Number of Input data points",
             ),
-
             color=alt.Color(
                 field=pivotSelection,
                 type="nominal",
@@ -119,31 +148,13 @@ salaryPie = (
     .properties(width=325)
 )
 
-salarySummary = (
-    (
-        alt.Chart(DATAFILTER.filteredData)
-        .mark_bar(cornerRadiusEnd=20)
-        .encode(
-            xOffset=f"{pivotSelection}:N",
-            x=alt.X(
-                "Level",
-                type="nominal",
-                sort=['Fresh Graduate', 'Junior', 'Associate', 'Senior']
-            ),
-            y=alt.Y(
-                field="Salary",
-                type="quantitative",
-                aggregate="mean",
-                title="Average Salary"
-            ),
-            tooltip=["Level", "Salary", pivotSelection],
-            color=alt.Color(
+GRAPHCOLORS = alt.Color(
                 pivotSelection,
                 type="nominal",
                 scale=alt.Scale(domain=DOMAIN, range=COLORS),
                 legend=alt.Legend(
                     direction="vertical",
-                    orient='right',
+                    orient="right",
                     titleColor="#8db6d8",
                     titleFontSize=30,
                     titleFontWeight=900,
@@ -153,7 +164,27 @@ salarySummary = (
                     symbolType="circle",
                     tickCount=4,
                 ),
+            )
+
+salarySummary = (
+    (
+        alt.Chart(DATAFILTER.filteredData)
+        .mark_bar(cornerRadiusEnd=20)
+        .encode(
+            xOffset=f"{pivotSelection}:N",
+            x=alt.X(
+                "Level",
+                type="nominal",
+                sort=["Fresh Graduate", "Junior", "Associate", "Senior"],
             ),
+            y=alt.Y(
+                field="Salary",
+                type="quantitative",
+                aggregate="mean",
+                title="Average Salary",
+            ),
+            tooltip=["Level", "Salary", pivotSelection],
+            color=GRAPHCOLORS,
         )
     )
     .transform_filter(salarySelect)
@@ -178,28 +209,14 @@ salaryScatter = (
                 type="quantitative",
                 aggregate="mean",
                 title="Average Salary",
-                sort="-y"
+                sort="-y",
             ),
-            size=alt.Size(pivotSelection, legend=None, scale=alt.Scale(range=[100, 500])),
+            size=alt.Size(
+                pivotSelection, legend=None, scale=alt.Scale(range=[100, 500])
+            ),
             tooltip=["Years", "Salary", pivotSelection],
-            color=alt.Color(
-                pivotSelection,
-                type="nominal",
-                scale=alt.Scale(domain=DOMAIN, range=COLORS),
-                legend=alt.Legend(
-                    direction="vertical",
-                    orient='right',
-                    titleColor="#8db6d8",
-                    titleFontSize=30,
-                    titleFontWeight=900,
-                    titleLimit=200,
-                    titleLineHeight=10,
-                    rowPadding=10,
-                    symbolType="circle",
-                    tickCount=4,
-                ),
-            )
-        )
+            color=GRAPHCOLORS
+        ),
     )
     .transform_filter(salarySelect)
     .properties(width=650)
