@@ -6,8 +6,7 @@ import altair as alt
 import streamlit as st
 from backend.database import Database
 from modules.navbar import navBar
-from utils import calculateWageUnits, COLORS
-
+from utils import COLORS, calculateWageUnits
 
 st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
 

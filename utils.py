@@ -4,6 +4,7 @@ This is the utils file, it contains all the utilitarian functions, variables and
 
 import time
 import warnings
+
 import pandas as pd
 import streamlit as st
 
@@ -158,6 +159,6 @@ def showEuroStatData(countrues):
     st.button("Re-run")
 
     st.markdown(
-        """Data from 
+        """Data from
         [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en)"""
     )

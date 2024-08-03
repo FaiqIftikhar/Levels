@@ -3,6 +3,7 @@ This page creates the form to enter wage data into the DB.
 """
 import random
 import time
+
 import requests
 import streamlit as st
 from backend.database import Database

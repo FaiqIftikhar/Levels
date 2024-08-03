@@ -4,8 +4,8 @@ import os
 
 import pandas as pd
 import streamlit as st
-from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
@@ -51,7 +51,7 @@ class Database:
             name=self.tableName,
             con=self.createDatabaseConnection(),
             if_exists=self.insertionMethod,
-            index=False
+            index=False,
         )
 
     # pylint: disable=no-self-argument

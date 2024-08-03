@@ -6,7 +6,7 @@ You can start the app by running `py -m streamlit run Levels.py`.
 import streamlit as st
 from backend.database import Database
 from modules.navbar import navBar
-from utils import calculateWageUnits, cleanData, changeWagedFactor
+from utils import calculateWageUnits, changeWagedFactor, cleanData
 
 
 def setupMainPage():
