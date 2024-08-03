@@ -2,10 +2,10 @@
 This is the utils file, it contains all the utilitarian functions, variables and constants.
 """
 
-import warnings
 import time
-import streamlit as st
+import warnings
 import pandas as pd
+import streamlit as st
 
 COLORS = [
     "#aa423a",
@@ -49,6 +49,7 @@ DATABASECOLUMNS = [
     "Level",
     "Years",
 ]
+
 
 @st.cache_data
 def changeWagedFactor(df, wageFactor="Monthly"):
@@ -157,5 +158,6 @@ def showEuroStatData(countrues):
     st.button("Re-run")
 
     st.markdown(
-        """Data from [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en)"""
+        """Data from 
+        [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en)"""
     )

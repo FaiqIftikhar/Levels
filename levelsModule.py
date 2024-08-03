@@ -4,9 +4,9 @@ You can start the app by running `py -m streamlit run Levels.py`.
 """
 
 import streamlit as st
+from backend.database import Database
 from modules.navbar import navBar
 from utils import calculateWageUnits, cleanData, changeWagedFactor
-from backend.database import Database
 
 
 def setupMainPage():
@@ -21,7 +21,7 @@ def setupMainPage():
 
     st.markdown(
         """
-        This is a small data app that shows salaries in hourly rate across 
+        This is a small data app that shows salaries in hourly rate across
         different countries of europe.\n
         👈 You can select one of the views from the sidebar\n
     """

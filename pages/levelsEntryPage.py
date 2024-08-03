@@ -1,13 +1,13 @@
 """
 This page creates the form to enter wage data into the DB.
 """
-import time
 import random
-import streamlit as st
+import time
 import requests
-from utils import COUNTRIES
+import streamlit as st
 from backend.database import Database
 from modules.navbar import navBar
+from utils import COUNTRIES
 
 st.set_page_config(page_title="Check your level", page_icon="📈")
 
@@ -17,7 +17,7 @@ st.title("📈 Enter your LEVEL!")
 
 st.markdown(
     """
-    This page lets you enter your wages, for a more rich experience. 
+    This page lets you enter your wages, for a more rich experience.
     """
 )
 
@@ -26,11 +26,11 @@ DATABASE = Database()
 
 def checkDataValidation(dataRow):
     """A simple function to do data validation of the form."""
-    if dataRow[2] == "":  ## For company name.
+    if dataRow[2] == "":  # For company name.
         st.toast("Please enter company name.", icon="⛔")
-    elif dataRow[3] == "":  ## For job title.
+    elif dataRow[3] == "":  # For job title.
         st.toast("Please enter job title.", icon="⛔")
-    elif dataRow[0] is None:  ## For country.
+    elif dataRow[0] is None:  # For country.
         st.toast("Please select country.", icon="⛔")
     elif dataRow[1] == "":
         st.toast("Please select city.", icon="⛔")
@@ -90,7 +90,7 @@ with col2:
             options=requests.post(
                 url="https://countriesnow.space/api/v0.1/countries/cities",
                 json={"country": country},
-                timeout=10
+                timeout=10,
             ).json()["data"],
         )
     elif country is None:

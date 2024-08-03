@@ -1,22 +1,25 @@
 """This module handles the database connection with Azure."""
 
 import os
+
+import pandas as pd
+import streamlit as st
 from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
-import streamlit as st
-import pandas as pd
+from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.engine import URL
-from dotenv import load_dotenv
 from utils import DATABASECOLUMNS
 
 load_dotenv()
 
 
 class Database:
-    """This class serves as a database instead of using CSVs/Excels.
-     
-    It connects to Azure and manages the data in the table."""
+    """
+    This class serves as a database instead of using CSVs/Excels.
+
+    It connects to Azure and manages the data in the table.
+    """
 
     def __init__(self) -> None:
         """Constructor for the Database class."""

@@ -2,11 +2,11 @@
 This file creates the dashboard page. Generates relevant graphs to show data.
 """
 
-import streamlit as st
 import altair as alt
-from utils import calculateWageUnits, COLORS
+import streamlit as st
 from backend.database import Database
 from modules.navbar import navBar
+from utils import calculateWageUnits, COLORS
 
 
 st.set_page_config(page_title="Dashboard", page_icon="📊", layout="wide")
@@ -33,7 +33,11 @@ view = st.sidebar.radio(
 
 
 class DataFiltering:
-    """This class creates a filtering object on top of a dataframe. Then lets you filter the df based on filters defined in the Frontend."""
+    """
+    This class creates a filtering object on top of a dataframe.
+
+    Then lets you filter the df based on filters defined in the Frontend.
+    """
 
     def __init__(self, dataFrame) -> None:
         """init function for the class."""
@@ -106,7 +110,7 @@ DATAFILTER.setHours(workHoursSelection)
 pivotSelection = st.sidebar.selectbox(
     "You can select here the key column:",
     options=["City", "Gender", "Job Title", "Tag"],
-    key = "pivotSelection",
+    key="pivotSelection",
 )
 
 
