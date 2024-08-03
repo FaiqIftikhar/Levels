@@ -4,17 +4,14 @@ You can start the app by running `py -m streamlit run Levels.py`.
 """
 
 import streamlit as st
-import pandas as pd
+from backend.database import Database
 from modules.navbar import navBar
-from utils import calculateWageUnits, cleanData, changeWagedFactor
+from utils import calculateWageUnits, changeWagedFactor, cleanData
+
 
 def setupMainPage():
     """This function calls the necassary streamlit elements to create the main landing page."""
-    st.set_page_config(
-        page_title="Levels",
-        page_icon="💸",
-        layout="wide"
-    )
+    st.set_page_config(page_title="Levels", page_icon="💸", layout="wide")
 
     navBar()
 
@@ -24,12 +21,14 @@ def setupMainPage():
 
     st.markdown(
         """
-        This is a small data app that shows salaries in hourly rate across 
+        This is a small data app that shows salaries in hourly rate across
         different countries of europe.\n
         👈 You can select one of the views from the sidebar\n
     """
     )
 
+
+DATABASE = Database()
 
 setupMainPage()
 
@@ -54,17 +53,27 @@ strong {
 )
 
 
-df = pd.read_csv("Salary_Data.csv")
+# df = pd.read_csv("Salary_Data.csv")
+df = DATABASE.getTableAsDataFrame()
 
 a1, a2, a3 = st.columns(3)
-a1.metric('**💯 Number of Levels:**', f"{len(df):,}")
-a2.metric("**🚹 Developers that are male:**", f"{int(len(df[df['Gender'] == 'Male'])/len(df)*100)}%")
-a3.metric("**👩🏽 Developers that are female:**", f"{int(len(df[df['Gender'] == 'Female']) / len(df)*100)}%")
+a1.metric("**💯 Number of Levels:**", f"{len(df):,}")
+a2.metric(
+    "**🚹 Developers that are male:**",
+    f"{int(len(df[df['Gender'] == 'Male'])/len(df)*100)}%",
+)
+a3.metric(
+    "**👩🏽 Developers that are female:**",
+    f"{int(len(df[df['Gender'] == 'Female']) / len(df)*100)}%",
+)
 
 
 b1, b2 = st.columns(2)
-b1.metric('**🌍 Percentage of Developers from Germany:**', value=f"{int(len(df[df['Country'] == 'Germany']) / len(df)*100)}%")
-b2.metric('**🚀 Most of the data is from:**', value=f"{df.City.mode()[0]}")
+b1.metric(
+    "**🌍 Percentage of Developers from Germany:**",
+    value=f"{int(len(df[df['Country'] == 'Germany']) / len(df)*100)}%",
+)
+b2.metric("**🚀 Most of the data is from:**", value=f"{df.City.mode()[0]}")
 
 df = calculateWageUnits(df)
 
@@ -72,9 +81,17 @@ euroData = cleanData()
 euroData = changeWagedFactor(euroData, "Hourly")
 
 c1, c2 = st.columns(2)
-b1.metric('**📈 Hourly wage in Germany according to Eurostat:**', value=f"€ {euroData[euroData['Country'] == 'Germany']['2024-S1'].iloc[0]}")
-b2.metric('**💶 Hourly wage in Germany according to Levels:**', value=f"€ {round(df[df['Number of Hours'] == 20]['Wage_Hourly'].mean(), 2)}")
+c1.metric(
+    "**📈 Hourly wage in Germany according to Eurostat:**",
+    value=f"€ {euroData[euroData['Country'] == 'Germany']['2024-S1'].iloc[0]}",
+)
+c2.metric(
+    "**💶 Hourly wage in Germany according to Levels:**",
+    value=f"€ {round(df[df['Number of Hours'] == 20]['Wage_Hourly'].mean(), 2)}",
+)
 
 
-st.markdown("""Source of all data
-        [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en).""")
+st.markdown(
+    """Source of all data
+        [Eurostat](https://ec.europa.eu/eurostat/databrowser/view/earn_mw_cur__custom_12336095/default/bar?lang=en)."""
+)
