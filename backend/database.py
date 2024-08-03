@@ -12,10 +12,11 @@ from utils import DATABASECOLUMNS
 
 load_dotenv()
 
-class Database():
+
+class Database:
     """This class serves as a database instead of using CSVs/Excels.
      
-       It connects to Azure and manages the data in the table."""
+    It connects to Azure and manages the data in the table."""
 
     def __init__(self) -> None:
         """Constructor for the Database class."""
@@ -43,12 +44,12 @@ class Database():
 
     def addRowToTable(self, row):
         """This function adds the `row` to the table in DB."""
-        return pd.DataFrame(data = [row], columns = DATABASECOLUMNS).to_sql(
-            name = self.tableName,
-            con = self.createDatabaseConnection(),
-            if_exists = self.insertionMethod,
+        return pd.DataFrame(data=[row], columns=DATABASECOLUMNS).to_sql(
+            name=self.tableName,
+            con=self.createDatabaseConnection(),
+            if_exists=self.insertionMethod,
             index=False
-            )
+        )
 
     # pylint: disable=no-self-argument
     @st.cache_data

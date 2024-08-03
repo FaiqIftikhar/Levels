@@ -30,7 +30,7 @@ COUNTRIES = [
     "France",
     "Spain",
     "Portugal",
-    "Netherlands"
+    "Netherlands",
 ]
 
 
@@ -47,7 +47,7 @@ DATABASECOLUMNS = [
     "Wage Unit",
     "Years of Experience",
     "Level",
-    "Years"
+    "Years",
 ]
 
 @st.cache_data
@@ -113,7 +113,7 @@ def calculateWageUnits(df):
     df["Wage_Monthly"], df["Wage_Yearly"], df["Wage_Hourly"] = (
         wageMonthly,
         wageYearly,
-        wageHourly
+        wageHourly,
     )
     df["OG_Salary"] = df["Salary"]
     df["OG_Wage_Unit"] = df["Wage Unit"]

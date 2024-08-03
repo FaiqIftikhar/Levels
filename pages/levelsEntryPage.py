@@ -15,9 +15,11 @@ navBar()
 
 st.title("📈 Enter your LEVEL!")
 
-st.markdown("""
-            This page lets you enter your wages, for a more rich experience. 
-            """)
+st.markdown(
+    """
+    This page lets you enter your wages, for a more rich experience. 
+    """
+)
 
 DATABASE = Database()
 
@@ -40,6 +42,7 @@ def checkDataValidation(dataRow):
         time.sleep(1)
         st.balloons()
 
+
 col1, col2 = st.columns(2)
 
 
@@ -50,16 +53,15 @@ with col1:
         options=COUNTRIES,
         placeholder="Select one of the country...",
         index=None,
-        key='Country',
+        key="Country",
     )
 
     company = st.text_input("Enter your company name:")
 
     experience = st.selectbox(
         "How many years of experience do you have?",
-        options=['0-1 Years', '1-3 Years', '4-6 Years', '7+ Years'],
+        options=["0-1 Years", "1-3 Years", "4-6 Years", "7+ Years"],
     )
-
 
     match experience:
         case "0-1 Years":
@@ -76,7 +78,7 @@ with col1:
     )
     wageUnit = st.radio(
         "Is the salary Hourly/Monthly/Yearly?",
-        options=['Hourly', 'Monthly', 'Yearly'],
+        options=["Hourly", "Monthly", "Yearly"],
         horizontal=True,
     )
 
@@ -86,15 +88,13 @@ with col2:
         CITY = st.selectbox(
             "Enter City",
             options=requests.post(
-                url = "https://countriesnow.space/api/v0.1/countries/cities",
-                json = {
-                    "country": country
-                },
+                url="https://countriesnow.space/api/v0.1/countries/cities",
+                json={"country": country},
                 timeout=10
-            ).json()['data']
+            ).json()["data"],
         )
     elif country is None:
-        CITY = st.selectbox("Enter City", options=[''], disabled=True)
+        CITY = st.selectbox("Enter City", options=[""], disabled=True)
     jobTitle = st.text_input("Enter the job title you were working as:")
 
     tag = st.selectbox(
@@ -146,8 +146,8 @@ st.button(
             wageUnit,
             experience,
             LEVEL,
-            YEARS
+            YEARS,
         ],
     ),
-    use_container_width=True
+    use_container_width=True,
 )

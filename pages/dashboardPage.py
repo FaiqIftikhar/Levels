@@ -26,7 +26,7 @@ DATABASE = Database()
 
 view = st.sidebar.radio(
     "Select how you want to see data: ",
-    options=['Scatter', 'Bar'],
+    options=["Scatter", "Bar"],
     index=0,
     horizontal=True,
 )
@@ -66,8 +66,8 @@ class DataFiltering:
             upperBound, lowerBound = 20, 0
 
         self.filteredData = self.filteredData[
-            (self.filteredData['Number of Hours'] <= upperBound)
-            & (self.filteredData['Number of Hours'] > lowerBound)
+            (self.filteredData["Number of Hours"] <= upperBound)
+            & (self.filteredData["Number of Hours"] > lowerBound)
         ]
 
 
@@ -82,7 +82,7 @@ DATAFILTER = DataFiltering(df)
 countrySelection = st.sidebar.selectbox(
     "You can select the country here:",
     options=list(df["Country"].unique()) + ["Bolivia", "Denmark"],
-    index= 0,
+    index=0,
     key="countrySelection",
 )
 DATAFILTER.setCountry(countrySelection)
@@ -91,7 +91,7 @@ wageUnitSelection = st.sidebar.selectbox(
     "You can select wage unit here:",
     options=["Yearly", "Monthly", "Hourly"],
     index=0,
-    key = "wageUnitSelection",
+    key="wageUnitSelection",
 )
 DATAFILTER.setWageUnit(wageUnitSelection)
 
@@ -99,7 +99,7 @@ workHoursSelection = st.sidebar.selectbox(
     "You can select working hours here:",
     options=["Full Time", "Part Time"],
     index=0,
-    key = "workHoursSelection",
+    key="workHoursSelection",
 )
 DATAFILTER.setHours(workHoursSelection)
 
@@ -125,7 +125,7 @@ salaryPie = (
                 color="#8db6d8",
                 fontSize=30,
                 fontWeight=900,
-            )
+            ),
         )
         .mark_arc(innerRadius=50)
         .encode(
@@ -149,22 +149,22 @@ salaryPie = (
 )
 
 GRAPHCOLORS = alt.Color(
-                pivotSelection,
-                type="nominal",
-                scale=alt.Scale(domain=DOMAIN, range=COLORS),
-                legend=alt.Legend(
-                    direction="vertical",
-                    orient="right",
-                    titleColor="#8db6d8",
-                    titleFontSize=30,
-                    titleFontWeight=900,
-                    titleLimit=200,
-                    titleLineHeight=10,
-                    rowPadding=10,
-                    symbolType="circle",
-                    tickCount=4,
-                ),
-            )
+    pivotSelection,
+    type="nominal",
+    scale=alt.Scale(domain=DOMAIN, range=COLORS),
+    legend=alt.Legend(
+        direction="vertical",
+        orient="right",
+        titleColor="#8db6d8",
+        titleFontSize=30,
+        titleFontWeight=900,
+        titleLimit=200,
+        titleLineHeight=10,
+        rowPadding=10,
+        symbolType="circle",
+        tickCount=4,
+    ),
+)
 
 salarySummary = (
     (
@@ -223,9 +223,9 @@ salaryScatter = (
 )
 
 TOPROW = None
-if view == 'Scatter':
+if view == "Scatter":
     TOPROW = salaryPie | salaryScatter
-elif view == 'Bar':
+elif view == "Bar":
     TOPROW = salaryPie | salarySummary
 
 st.altair_chart(TOPROW)
