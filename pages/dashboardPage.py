@@ -6,6 +6,7 @@ import streamlit as st
 import altair as alt
 import pandas as pd
 from utils import calculateWageUnits, COLORS
+from backend.database import database
 from modules.navbar import navBar
 
 
@@ -16,8 +17,11 @@ navBar()
 st.title("📊 Dashboard")
 
 st.markdown("""
-            **This page can tell you an interesting story ⛩️**
+            **This page can tell you an interesting story ⛩️.**\n
+            👈 Choose filters from the sidebar.
             """)
+
+DATABASE = database()
 
 view = st.sidebar.radio("Select how you want to see data: ", options=['Scatter', 'Bar'], index=0, horizontal=True)
 
@@ -58,7 +62,8 @@ class DataFiltering():
             ]
 
 
-df = pd.read_csv("Salary_Data.csv")
+# df = pd.read_csv("Salary_Data.csv")
+df = DATABASE.getTableAsDataFrame()
 
 df = calculateWageUnits(df)
 

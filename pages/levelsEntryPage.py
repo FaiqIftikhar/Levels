@@ -7,6 +7,7 @@ import streamlit as st
 import pandas as pd
 import requests
 from utils import COUNTRIES
+from backend.database import database
 from modules.navbar import navBar
 
 st.set_page_config(page_title="Check your level", page_icon="📈")
@@ -19,6 +20,7 @@ st.markdown("""
             This page lets you enter your wages, for a more rich experience. 
             """)
 
+DATABASE = database()
 
 
 def checkDataValidation(dataRow):
@@ -33,15 +35,16 @@ def checkDataValidation(dataRow):
         st.toast("Please select city.", icon="⛔")
     else:
         st.toast("Saving data...", icon="⌛")
-        df = pd.DataFrame([dataRow],
-            columns=['Country', 'City', 'Company', 'Job Title', 'Tag', 'Number of Hours', 'Currency', 'Gender', 'Salary', 'Wage Unit', 'Years of Experience', 'Level', 'Years']
-            )
-        originalDataframe = pd.read_csv("Salary_Data.csv")
-        originalDataframe = pd.concat([originalDataframe, df], axis=0).reset_index(drop=True)
+        # df = pd.DataFrame([dataRow],
+            # columns=['Country', 'City', 'Company', 'Job Title', 'Tag', 'Number of Hours', 'Currency', 'Gender', 'Salary', 'Wage Unit', 'Years of Experience', 'Level', 'Years']
+            # )
+        # originalDataframe = pd.read_csv("Salary_Data.csv")
+        # originalDataframe = pd.concat([originalDataframe, df], axis=0).reset_index(drop=True)
         # print(original_df)
-        originalDataframe.to_csv("Salary_Data.csv", index=False)
+        # originalDataframe.to_csv("Salary_Data.csv", index=False)
+        result = DATABASE.addRowToTable(dataRow)
         time.sleep(1)
-        st.toast("Data saved.", icon="✅")
+        st.toast(f"Data saved. {result}", icon="✅")
         time.sleep(1)
         st.balloons()
 

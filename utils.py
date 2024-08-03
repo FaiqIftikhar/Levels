@@ -26,6 +26,10 @@ COLORS = [
 COUNTRIES = ['Germany', 'United Kingdom', 'Luxembourg', 'France', 'Spain', 'Portugal', 'Netherlands']
 
 
+DATABASECOLUMNS = ['Country', 'City', 'Company', 'Job Title', 'Tag', 'Number of Hours',
+       'Currency', 'Gender', 'Salary', 'Wage Unit', 'Years of Experience',
+       'Level', 'Years']
+
 @st.cache_data
 def changeWagedFactor(df, wageFactor = 'Monthly'):
     """Function to change the wage factor in the dataset. Mainly used for Eurostat dataset."""

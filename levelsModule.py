@@ -4,9 +4,9 @@ You can start the app by running `py -m streamlit run Levels.py`.
 """
 
 import streamlit as st
-import pandas as pd
 from modules.navbar import navBar
 from utils import calculateWageUnits, cleanData, changeWagedFactor
+from backend.database import database
 
 def setupMainPage():
     """This function calls the necassary streamlit elements to create the main landing page."""
@@ -30,6 +30,7 @@ def setupMainPage():
     """
     )
 
+DATABASE = database()
 
 setupMainPage()
 
@@ -54,7 +55,8 @@ strong {
 )
 
 
-df = pd.read_csv("Salary_Data.csv")
+# df = pd.read_csv("Salary_Data.csv")
+df = DATABASE.getTableAsDataFrame()
 
 a1, a2, a3 = st.columns(3)
 a1.metric('**💯 Number of Levels:**', f"{len(df):,}")
