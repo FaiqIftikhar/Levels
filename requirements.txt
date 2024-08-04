@@ -9,3 +9,4 @@ azure-keyvault-secrets
 sqlalchemy
 python-dotenv
 pyodbc
+openpyxl
