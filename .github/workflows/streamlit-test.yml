@@ -19,5 +19,5 @@ jobs:
           python-version: '3.10'
       - uses: streamlit/streamlit-app-action@v0.0.3
         with:
-          app-path: streamlit_app.py
+          app-path: levelsModule.py
           ruff: true
